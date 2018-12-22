@@ -16,8 +16,8 @@ def maintenance(app):
     Returns if the application is in maintenance mode.
     """
     cli.user()
-    cli.assert_project()
-    click.echo(f'Fetching maintenance mode for {cli.get_app_name()}... ',
+    cli.assert_project(app)
+    click.echo(f'Fetching maintenance mode for {app}... ',
                nl=False)
     with click_spinner.spinner():
         enabled = api.Apps.maintenance(app=app, maintenance=None)
@@ -36,8 +36,8 @@ def maintenance_on(app):
     Turns maintenance mode on.
     """
     cli.user()
-    cli.assert_project()
-    click.echo(f'Enabling maintenance mode for app {cli.get_app_name()}... ',
+    cli.assert_project(app)
+    click.echo(f'Enabling maintenance mode for app {app}... ',
                nl=False)
     with click_spinner.spinner():
         app = api.Apps.maintenance(app=app, maintenance=True)
@@ -53,8 +53,8 @@ def maintenance_off(app):
     Turns maintenance mode off.
     """
     cli.user()
-    cli.assert_project()
-    click.echo(f'Disabling maintenance mode for app {cli.get_app_name()}... ',
+    cli.assert_project(app)
+    click.echo(f'Disabling maintenance mode for app {app}... ',
                nl=False)
     with click_spinner.spinner():
         app = api.Apps.maintenance(app=app, maintenance=False)

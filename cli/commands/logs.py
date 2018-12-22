@@ -24,7 +24,7 @@ def logs(follow, app):
         return
 
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
 
     url = 'https://stories.asyncyapp.com/logs'
     click.echo(f'Retrieving logs for {app}... ', nl=False)

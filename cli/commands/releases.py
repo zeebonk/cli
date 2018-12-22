@@ -24,7 +24,7 @@ def releases(app, limit):
     $ asyncy releases:rollback
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
 
     # click.echo(click.style('Releases', fg='magenta'))
     # click.echo(click.style('========', fg='magenta'))
@@ -62,10 +62,10 @@ def releases_rollback(version, app):
     Rollback release to a previous release.
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
 
     if not version:
-        click.echo(f'Getting latest release for app {cli.get_app_name()}... ',
+        click.echo(f'Getting latest release for app {app}... ',
                    nl=False)
         with click_spinner.spinner():
             res = api.Releases.get(app=app)

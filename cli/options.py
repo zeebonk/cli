@@ -7,7 +7,7 @@ from .cli import run
 
 try:
     from . import cli
-    _app = cli.get_app_name()
+    _app = cli.get_app_name_from_yml()
 except:
     _app = None
 

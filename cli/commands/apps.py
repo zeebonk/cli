@@ -147,7 +147,7 @@ def apps_url(app):
     Great to use with $(asyncy apps:url) in bash.
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
     print_nl = False
     import os
     if os.isatty(sys.stdout.fileno()):
@@ -165,7 +165,7 @@ def apps_destroy(confirm, app):
     Destroy an application
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
     if (
         confirm or
         click.confirm(f'Do you want to destroy "{app}"?', abort=True)

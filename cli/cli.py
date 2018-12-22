@@ -74,9 +74,10 @@ def find_asyncy_yml():
     return None
 
 
-def get_app_name() -> str:
+def get_app_name_from_yml() -> str:
     file = find_asyncy_yml()
-    assert file is not None
+    if file is None:
+        return None
     import yaml
     with open(file, 'r') as s:
         return yaml.load(s).pop('app_name')
@@ -183,10 +184,9 @@ def print_command(command):
     click.echo(click.style(f'$ {command}', fg='magenta'))
 
 
-def assert_project():
+def assert_project(app):
     try:
-        name = get_app_name()
-        if not name:
+        if app is None:
             raise Exception()
     except:
         click.echo(click.style('No Asyncy application found.', fg='red'))

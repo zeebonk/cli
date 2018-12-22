@@ -23,7 +23,7 @@ def config(app):
 
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
     click.echo('Fetching config... ', nl=False)
     with click_spinner.spinner():
         config = api.Config.get(app)
@@ -72,7 +72,7 @@ def config_set(variables, app, message):
 
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
 
     click.echo('Fetching config... ', nl=False)
     with click_spinner.spinner():
@@ -118,10 +118,10 @@ def config_get(variables, app):
     Get one or more environment variables
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
     if variables:
 
-        click.echo(f'Fetching config for {cli.get_app_name()}... ', nl=False)
+        click.echo(f'Fetching config for {app}... ', nl=False)
         with click_spinner.spinner():
             config = api.Config.get(app=app)
         click.echo(click.style('√', fg='green'))
@@ -162,7 +162,7 @@ def config_del(variables, app, message):
     Delete one or more environment variables
     """
     cli.user()
-    cli.assert_project()
+    cli.assert_project(app)
     if variables:
 
         click.echo('Fetching config... ', nl=False)

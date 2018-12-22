@@ -22,7 +22,7 @@ def bootstrap(story):
         data = pkgutil.get_data('cli', f'stories/{story}.story')
         click.echo(data)
         try:
-            app_name = cli.get_app_name()
+            app_name = cli.get_app_name_from_yml()
         except:
             app_name = 'Not created yet'
 
