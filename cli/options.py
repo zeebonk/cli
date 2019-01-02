@@ -15,5 +15,8 @@ except:
 app = click.option(
     '--app', '-a',
     default=_app,
-    help=f'(required) [default: {_app}] app to run command against'
+    help=f'(required) [default: {_app}] app to run command against',
+    callback=lambda context, p, app: cli.assert_project(
+        context.command.name, app, _app
+    )
 )

@@ -17,7 +17,6 @@ from ..api import Config, Releases
 @options.app
 def deploy(app, message):
     cli.user()
-    cli.assert_project(app)
     click.echo(f'Deploying app {app}... ', nl=False)
     with click_spinner.spinner():
         config = Config.get(app)
