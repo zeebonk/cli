@@ -192,7 +192,11 @@ def assert_project(command, app, default_app, allow_option):
         print_command('asyncy apps:create')
         sys.exit(1)
     elif not allow_option and app != default_app:
-        click.echo(click.style('The --app option is not allowed with the {} command.'.format(command), fg='red'))
+        click.echo(click.style(
+            'The --app option is not allowed with the {} command.'
+            .format(command),
+            fg='red'
+        ))
         sys.exit(1)
     return app
 
