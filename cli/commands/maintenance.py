@@ -10,7 +10,7 @@ from .. import options
 
 
 @cli.cli.command()
-@options.app
+@options.app()
 def maintenance(app):
     """
     Returns if the application is in maintenance mode.
@@ -29,7 +29,7 @@ def maintenance(app):
 
 
 @cli.cli.command(aliases=['maintenance:on'])
-@options.app
+@options.app()
 def maintenance_on(app):
     """
     Turns maintenance mode on.
@@ -45,7 +45,7 @@ def maintenance_on(app):
 
 
 @cli.cli.command(aliases=['maintenance:off'])
-@options.app
+@options.app()
 def maintenance_off(app):
     """
     Turns maintenance mode off.

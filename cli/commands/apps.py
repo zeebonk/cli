@@ -140,7 +140,7 @@ def apps_create(name, team):
 
 
 @cli.cli.command(aliases=['apps:url'])
-@options.app
+@options.app()
 def apps_url(app):
     """
     Returns the full url of your application.
@@ -156,7 +156,7 @@ def apps_url(app):
 
 
 @cli.cli.command(aliases=['apps:destroy'])
-@options.app
+@options.app()
 @click.option('--confirm', is_flag=True,
               help='Do not prompt to confirm destruction.')
 def apps_destroy(confirm, app):

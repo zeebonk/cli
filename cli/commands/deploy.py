@@ -14,7 +14,7 @@ from ..api import Config, Releases
 
 @cli.cli.command(aliases=['deploy'])
 @click.option('--message', is_flag=True, help='Deployment message')
-@options.app
+@options.app(allow_option=False)
 def deploy(app, message):
     cli.user()
     click.echo(f'Deploying app {app}... ', nl=False)

@@ -14,7 +14,7 @@ from ..api import Apps
 
 @cli.cli.command()
 @click.option('--follow', '-f', is_flag=True, help='Follow the logs')
-@options.app
+@options.app()
 def logs(follow, app):
     """
     Show application logs

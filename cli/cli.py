@@ -184,14 +184,14 @@ def print_command(command):
     click.echo(click.style(f'$ {command}', fg='magenta'))
 
 
-def assert_project(command, app, default_app):
+def assert_project(command, app, default_app, allow_option):
     if app is None:
         click.echo(click.style('No Asyncy application found.', fg='red'))
         click.echo()
         click.echo('Create an application with:')
         print_command('asyncy apps:create')
         sys.exit(1)
-    elif command == "deploy" and app != default_app:
+    elif not allow_option and app != default_app:
         click.echo(click.style('The --app option is not allowed with the {} command.'.format(command), fg='red'))
         sys.exit(1)
     return app

@@ -12,11 +12,12 @@ except:
     _app = None
 
 
-app = click.option(
-    '--app', '-a',
-    default=_app,
-    help=f'(required) [default: {_app}] app to run command against',
-    callback=lambda context, p, app: cli.assert_project(
-        context.command.name, app, _app
+def app(allow_option=True):
+    return click.option(
+        '--app', '-a',
+        default=_app,
+        help=f'(required) [default: {_app}] app to run command against',
+        callback=lambda context, p, app: cli.assert_project(
+            context.command.name, app, _app, allow_option
+        )
     )
-)
