@@ -74,9 +74,10 @@ def find_asyncy_yml():
     return None
 
 
-def get_app_name() -> str:
+def get_app_name_from_yml() -> str:
     file = find_asyncy_yml()
-    assert file is not None
+    if file is None:
+        return None
     import yaml
     with open(file, 'r') as s:
         return yaml.load(s).pop('app_name')
@@ -183,17 +184,21 @@ def print_command(command):
     click.echo(click.style(f'$ {command}', fg='magenta'))
 
 
-def assert_project():
-    try:
-        name = get_app_name()
-        if not name:
-            raise Exception()
-    except:
+def assert_project(command, app, default_app, allow_option):
+    if app is None:
         click.echo(click.style('No Asyncy application found.', fg='red'))
         click.echo()
         click.echo('Create an application with:')
         print_command('asyncy apps:create')
         sys.exit(1)
+    elif not allow_option and app != default_app:
+        click.echo(click.style(
+            'The --app option is not allowed with the {} command.'
+            .format(command),
+            fg='red'
+        ))
+        sys.exit(1)
+    return app
 
 
 def init():

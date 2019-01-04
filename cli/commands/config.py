@@ -10,7 +10,7 @@ from .. import options
 
 
 @cli.cli.command()
-@options.app
+@options.app()
 def config(app):
     """
     List environment variables.
@@ -23,7 +23,6 @@ def config(app):
 
     """
     cli.user()
-    cli.assert_project()
     click.echo('Fetching config... ', nl=False)
     with click_spinner.spinner():
         config = api.Config.get(app)
@@ -59,7 +58,7 @@ def config(app):
 @click.argument('variables', nargs=-1)
 @click.option('--message', '-m', nargs=1, default=None,
               help='(optional) Message why variable(s) were created.')
-@options.app
+@options.app()
 def config_set(variables, app, message):
     """
     Set one or more environment variables
@@ -72,7 +71,6 @@ def config_set(variables, app, message):
 
     """
     cli.user()
-    cli.assert_project()
 
     click.echo('Fetching config... ', nl=False)
     with click_spinner.spinner():
@@ -112,16 +110,15 @@ def config_set(variables, app, message):
 
 @cli.cli.command(aliases=['config:get'])
 @click.argument('variables', nargs=-1)
-@options.app
+@options.app()
 def config_get(variables, app):
     """
     Get one or more environment variables
     """
     cli.user()
-    cli.assert_project()
     if variables:
 
-        click.echo(f'Fetching config for {cli.get_app_name()}... ', nl=False)
+        click.echo(f'Fetching config for {app}... ', nl=False)
         with click_spinner.spinner():
             config = api.Config.get(app=app)
         click.echo(click.style('√', fg='green'))
@@ -156,13 +153,12 @@ def config_get(variables, app):
 @click.argument('variables', nargs=-1)
 @click.option('--message', '-m', nargs=1, default=None,
               help='(optional) Message why variable(s) were deleted.')
-@options.app
+@options.app()
 def config_del(variables, app, message):
     """
     Delete one or more environment variables
     """
     cli.user()
-    cli.assert_project()
     if variables:
 
         click.echo('Fetching config... ', nl=False)

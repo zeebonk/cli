@@ -140,14 +140,13 @@ def apps_create(name, team):
 
 
 @cli.cli.command(aliases=['apps:url'])
-@options.app
+@options.app()
 def apps_url(app):
     """
     Returns the full url of your application.
     Great to use with $(asyncy apps:url) in bash.
     """
     cli.user()
-    cli.assert_project()
     print_nl = False
     import os
     if os.isatty(sys.stdout.fileno()):
@@ -157,7 +156,7 @@ def apps_url(app):
 
 
 @cli.cli.command(aliases=['apps:destroy'])
-@options.app
+@options.app()
 @click.option('--confirm', is_flag=True,
               help='Do not prompt to confirm destruction.')
 def apps_destroy(confirm, app):
@@ -165,7 +164,6 @@ def apps_destroy(confirm, app):
     Destroy an application
     """
     cli.user()
-    cli.assert_project()
     if (
         confirm or
         click.confirm(f'Do you want to destroy "{app}"?', abort=True)

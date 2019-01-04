@@ -14,7 +14,7 @@ from ..api import Apps
 
 @cli.cli.command()
 @click.option('--follow', '-f', is_flag=True, help='Follow the logs')
-@options.app
+@options.app()
 def logs(follow, app):
     """
     Show application logs
@@ -24,7 +24,6 @@ def logs(follow, app):
         return
 
     cli.user()
-    cli.assert_project()
 
     url = 'https://stories.asyncyapp.com/logs'
     click.echo(f'Retrieving logs for {app}... ', nl=False)

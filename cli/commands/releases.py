@@ -14,7 +14,7 @@ from ..helpers.datetime import parse_psql_date_str, reltime
 @cli.cli.command()
 @click.option('--limit', '-n', nargs=1, default=20,
               help='List N latest releases')
-@options.app
+@options.app()
 def releases(app, limit):
     """
     List application releases
@@ -24,7 +24,6 @@ def releases(app, limit):
     $ asyncy releases:rollback
     """
     cli.user()
-    cli.assert_project()
 
     # click.echo(click.style('Releases', fg='magenta'))
     # click.echo(click.style('========', fg='magenta'))
@@ -56,16 +55,15 @@ def releases(app, limit):
 
 @cli.cli.command(aliases=['releases:rollback'])
 @click.argument('version', nargs=1, required=False)
-@options.app
+@options.app()
 def releases_rollback(version, app):
     """
     Rollback release to a previous release.
     """
     cli.user()
-    cli.assert_project()
 
     if not version:
-        click.echo(f'Getting latest release for app {cli.get_app_name()}... ',
+        click.echo(f'Getting latest release for app {app}... ',
                    nl=False)
         with click_spinner.spinner():
             res = api.Releases.get(app=app)
