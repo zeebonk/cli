@@ -93,7 +93,7 @@ class Releases:
 
     @staticmethod
     def rollback(version: str, app: str):
-        app = Apps.get_uuid_from_hostname(app)
+        app_uuid = Apps.get_uuid_from_hostname(app)
         res = graphql(
             """
             query($app: UUID!, $version: Int!){
@@ -103,30 +103,14 @@ class Releases:
               }
             }
             """,
-            app=app,
+            app=app_uuid,
             version=version
         )
         release = res['data']['releaseByAppUuidAndId']
 
-        res = graphql(
-            """
-            mutation ($data: CreateReleaseInput!){
-              createRelease(input: $data) {
-                release { id }
-              }
-            }
-            """,
-            data={
-                'release': {
-                    'appUuid': app,
-                    'message': f'Rollback to v{version}',
-                    'config': release['config'] or {},
-                    'payload': release['payload'],
-                    'ownerUuid': cli.data['id']
-                }
-            }
-        )
-        return res['data']['createRelease']['release']
+        return Releases.create(release['config'] or {},
+                               release['payload'], app,
+                               f'Rollback to v{version}')
 
     @staticmethod
     def get(app: str):
