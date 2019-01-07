@@ -36,8 +36,15 @@ def logs(follow, app):
 
     click.echo()
 
-    arr = r.json()
-    assert isinstance(arr, list)
+    try:
+        arr = r.json()
+        assert isinstance(arr, list)
+    except BaseException:
+        click.echo('Logs for your app aren\'t available right now.\n'
+                   'If this error persists, please shoot us an email '
+                   'on support@asyncy.com', err=True)
+        import sys
+        sys.exit(1)
 
     cli.track('App Logs Retrieved', {'App name': app, 'Log count': len(arr)})
 
