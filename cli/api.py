@@ -3,6 +3,7 @@
 import os
 import sys
 from json import dumps
+from urllib.error import URLError
 
 import click
 
@@ -18,18 +19,27 @@ graphql_endpoint = os.getenv(
 
 
 def graphql(query, **variables):
-    res = requests.post(
-        graphql_endpoint,
-        data=dumps({
-            'query': query,
-            'variables': variables
-        }),
-        headers={
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': f'Bearer {cli.get_access_token()}'
-        }
-    )
+    try:
+        res = requests.post(
+            graphql_endpoint,
+            data=dumps({
+                'query': query,
+                'variables': variables
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': f'Bearer {cli.get_access_token()}'
+            }
+        )
+    except KeyboardInterrupt:  # OK - user cancelled.
+        click.echo('\nCancelled')
+        sys.exit(1)
+    except (URLError, ConnectionError, requests.exceptions.ConnectionError):
+        click.echo(click.style(f'\nFailed to connect to {graphql_endpoint}',
+                               fg='red'), err=True)
+        sys.exit(1)
+
     data = res.json()
     if 'errors' in data:
         click.echo()
