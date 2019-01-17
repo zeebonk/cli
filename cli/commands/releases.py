@@ -62,6 +62,9 @@ def releases_rollback(version, app):
     """
     cli.user()
 
+    if version and version[0] == 'v':
+        version = version[1:]
+
     if not version:
         click.echo(f'Getting latest release for app {app}... ',
                    nl=False)
