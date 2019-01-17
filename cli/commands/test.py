@@ -53,16 +53,20 @@ def compile_app(app_name_for_analytics, debug) -> dict:
 
     with click_spinner.spinner():
         try:
-            stories = json.loads(App.compile(os.getcwd(), debug=debug))
+            stories = json.loads(App.compile(os.getcwd()))
         except BaseException:
+            import traceback
+            traceback.print_exc()
             click.echo('Failed', err=True)
             stories = None
 
         result = 'Success'
-        count = len(stories.get('stories', {}))
+        count = 0
 
         if stories is None:
             result = 'Failed'
+        else:
+            count = len(stories.get('stories', {}))
 
         cli.track('App Compiled', {
             'App name': app_name_for_analytics,
