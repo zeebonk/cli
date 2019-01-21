@@ -120,7 +120,7 @@ jobs:
           command: snapcraft
       - run:
           name: install snap
-          command: snap install asyncy_$CIRCLE_TAG_amd64.snap --dangerous --devmode
+          command: snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
       - run:
           name: check version
           command: asyncy version | grep $CIRCLE_TAG
@@ -129,7 +129,7 @@ jobs:
           command: echo $SNAPCRAFT_LOGIN | snapcraft login --with -
       - run:
           name: snapcraft push
-          command: snapcraft push --release edge asyncy_$CIRCLE_TAG_amd64.snap
+          command: snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap
 workflows:
   version: 2
   build-test-deploy:
