@@ -98,7 +98,7 @@ workflows:
             only: /^[0-9]+\.[0-9]+\.[0-9]+$/
           branches:
             ignore: /.*/
-    - release_brew:
+    - release_brew
 #        requires:
 #        - release_pypi
 #        filters:
