@@ -10,10 +10,11 @@ from .. import cli, options
 from ..api import Config, Releases
 
 
-@cli.cli.command(aliases=['deploy'])
+@cli.cli.command()
 @click.option('--message', is_flag=True, help='Deployment message')
 @options.app(allow_option=False)
 def deploy(app, message):
+    # TODO: Add help text
     cli.user()
 
     payload = compile_app(app, False)  # Also adds a spinner.

@@ -7,6 +7,7 @@ from .. import cli
 
 @cli.cli.command()
 def login():
+    # TODO: Add help text
     cli.user()
     click.echo(
         'You\'re logged in as ' +

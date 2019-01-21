@@ -10,8 +10,6 @@ from uuid import uuid4
 
 import click
 
-from click_alias import ClickAliasedGroup
-
 import click_help_colors
 
 import click_spinner
@@ -152,7 +150,7 @@ def user() -> dict:
         )
         click.echo()
         click.echo('Create a new app with:')
-        print_command('asyncy apps:create')
+        print_command('asyncy apps create')
 
         click.echo()
 
@@ -189,7 +187,7 @@ def assert_project(command, app, default_app, allow_option):
         click.echo(click.style('No Asyncy application found.', fg='red'))
         click.echo()
         click.echo('Create an application with:')
-        print_command('asyncy apps:create')
+        print_command('asyncy apps create')
         sys.exit(1)
     elif not allow_option and app != default_app:
         click.echo(click.style(
@@ -246,28 +244,8 @@ def run(cmd: str):
 # click_help_colors._colorize = _colorize
 
 
-class Cli(DYMGroup, ClickAliasedGroup,
-          click_help_colors.HelpColorsGroup):
-
-    def format_commands(self, ctx, formatter):
-        rows = []
-        for sub_command in self.list_commands(ctx):
-            cmd = self.get_command(ctx, sub_command)
-            if cmd is None:
-                continue
-            if hasattr(cmd, 'hidden') and cmd.hidden:
-                continue
-            if sub_command in self._commands:
-                aliases = ','.join(sorted(self._commands[sub_command]))
-                if ':' in aliases:
-                    sub_command = f'  {aliases}'
-                else:
-                    sub_command = aliases
-            cmd_help = cmd.short_help or ''
-            rows.append((sub_command, cmd_help))
-        if rows:
-            with formatter.section('Commands'):
-                formatter.write_dl(rows)
+class Cli(DYMGroup, click_help_colors.HelpColorsGroup):
+    pass
 
 
 @click.group(cls=Cli,
