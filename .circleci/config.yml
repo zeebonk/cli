@@ -92,6 +92,9 @@ jobs:
           name: install snapcraft
           command: snap install snapcraft --classic
       - run:
+          name: hash -r
+          command: hash -r
+      - run:
           name: create snapcraft.yaml
           command: |
             export CIRCLE_TAG=0.3.4 &&
