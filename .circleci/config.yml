@@ -1,39 +1,88 @@
 version: 2.0
 jobs:
-    build:
-        working_directory: ~/repo
-        docker:
-            - image: circleci/python:3.7.0-node
-        steps:
-            - checkout
-            - restore_cache:
-                keys:
-                    - v1-dependencies-{{ checksum "setup.py" }}
-                    - v1-dependencies-
+  test:
+    working_directory: ~/repo
+    docker:
+    - image: circleci/python:3.7.0-node
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "setup.py" }}
+        - v1-dependencies-
 
-            - run:
-                name: install dependencies
-                command: |
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    python3 setup.py install
-                    pip install tox
+    - run:
+        name: install dependencies
+        command: |
+          python -m venv venv
+          . venv/bin/activate
+          python3 setup.py install
+          pip install tox
 
-            - save_cache:
-                paths:
-                    - ./venv
-                key: v1-dependencies-{{ checksum "setup.py" }}
+    - save_cache:
+        paths:
+        - ./venv
+        key: v1-dependencies-{{ checksum "setup.py" }}
 
-            - run:
-                command: |
-                    . venv/bin/activate
-                    tox
+    - run:
+        command: |
+          . venv/bin/activate
+          tox
 
-            - run:
-                name: collect coverage
-                command: |
-                    bash <(curl -s https://codecov.io/bash)
+    - run:
+        name: collect coverage
+        command: |
+          bash <(curl -s https://codecov.io/bash)
 
-            - store_artifacts:
-                path: test-reports
-                destination: test-reports
+    - store_artifacts:
+        path: test-reports
+        destination: test-reports
+
+  release_pypi:
+    docker:
+    - image: circleci/python:3.7.0-node
+    steps:
+      - checkout
+      - run:
+          name: setup venv
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+      - run:
+          name: install twine
+          command: |
+            . venv/bin/activate
+            pip install twine
+      - run:
+          name: sdist
+          command: |
+            . venv/bin/activate
+            python setup.py sdist
+      - run:
+          name: upload
+          command: |
+            . venv/bin/activate
+            twine upload dist/asyncy-*.tar.gz
+#  release_brew:
+#
+#  release_snap:
+
+
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+    - test
+    - release_pypi:
+        requires:
+          - test
+        filters:
+          tags:
+            only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+          branches:
+            ignore: /.*/
+
+#    - release_pypi
+#    - release_brew
+#    - release_snap
