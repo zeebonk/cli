@@ -115,12 +115,12 @@ jobs:
       - run:
           name: build snap
           command: snapcraft
-      - run:
-          name: install snap
-          command: snap install asyncy_0.3.4_amd64.snap --dangerous --devmode
-      - run:
-          name: check version
-          command: asyncy version | grep 0.3.4
+#      - run:
+#          name: install snap
+#          command: snap install asyncy_0.3.4_amd64.snap --dangerous --devmode
+#      - run:
+#          name: check version
+#          command: asyncy version | grep 0.3.4
       - run:
           name: snapcraft login
           command: echo $SNAPCRAFT_LOGIN | snapcraft login --with -
