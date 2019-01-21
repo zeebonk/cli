@@ -86,8 +86,8 @@ jobs:
           name: apt-get update
           command: sudo apt-get update
       - run:
-          name: install snapcraft
-          command: sudo apt-get install snapcraft
+          name: install snapd
+          command: sudo apt-get install snapd
       - run:
           name: create snapcraft.yaml
           command: |
