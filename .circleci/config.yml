@@ -14,7 +14,7 @@ jobs:
     - run:
         name: install dependencies
         command: |
-          python3 -m venv venv
+          python -m venv venv
           . venv/bin/activate
           python3 setup.py install
           pip install tox
@@ -44,14 +44,25 @@ jobs:
     
     steps:
       - run:
+          name: setup venv
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+      - run:
           name: install twine
-          command: pip install twine
+          command: |
+            . venv/bin/activate
+            pip install twine
       - run:
           name: sdist
-          command: python setup.py sdist
+          command: |
+            . venv/bin/activate
+            python setup.py sdist
       - run:
           name: upload
-          command: twine upload dist/asyncy-*.tar.gz
+          command: |
+            . venv/bin/activate
+            twine upload dist/asyncy-*.tar.gz
 #  release_brew:
 #
 #  release_snap:
