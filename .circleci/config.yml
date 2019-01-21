@@ -87,7 +87,7 @@ jobs:
           command: apt-get update
       - run:
           name: install snapd
-          command: apt-get install -y snapcraft snap
+          command: apt-get install -y snapcraft snapd
       - run:
           name: create snapcraft.yaml
           command: |
