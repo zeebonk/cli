@@ -79,7 +79,7 @@ jobs:
 #          command: bash ./scripts/update_brew.sh $CIRCLE_TAG
   release_snap:
     docker:
-      - image: snapcore/snapcraft
+      - image: snapcore/snapcraft:stable
     steps:
       - checkout
       - run:
