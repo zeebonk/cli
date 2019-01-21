@@ -11,17 +11,19 @@ from .. import options
 from ..helpers.datetime import parse_psql_date_str, reltime
 
 
-@cli.cli.command()
+@cli.cli.group()
+def releases():
+    # TODO: Add help text
+    pass
+
+
+@releases.command(name='list')
 @click.option('--limit', '-n', nargs=1, default=20,
               help='List N latest releases')
 @options.app()
-def releases(app, limit):
+def list_command(app, limit):
     """
     List application releases
-
-    More:
-
-    $ asyncy releases:rollback
     """
     cli.user()
 
@@ -53,10 +55,10 @@ def releases(app, limit):
         click.echo(f'No releases yet for app {app}.')
 
 
-@cli.cli.command(aliases=['releases:rollback'])
+@releases.command()
 @click.argument('version', nargs=1, required=False)
 @options.app()
-def releases_rollback(version, app):
+def rollback(version, app):
     """
     Rollback release to a previous release.
     """
