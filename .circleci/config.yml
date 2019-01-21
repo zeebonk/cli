@@ -79,9 +79,15 @@ jobs:
 #          command: bash ./scripts/update_brew.sh $CIRCLE_TAG
   release_snap:
     docker:
-      - image: snapcore/snapcraft:stable
+      - image: circleci/python:3.7.0-node
     steps:
       - checkout
+      - run:
+          name: apt-get update
+          command: apt-get update
+      - run:
+          name: install snapcraft
+          command: apt-get install snapcraft
       - run:
           name: create snapcraft.yaml
           command: |
