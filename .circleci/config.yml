@@ -79,7 +79,7 @@ jobs:
 #          command: bash ./scripts/update_brew.sh $CIRCLE_TAG
   release_snap:
     docker:
-      - image: circleci/python:3.7.0-node
+      - image: ubuntu:18.04
     steps:
       - checkout
       - run:
@@ -87,13 +87,7 @@ jobs:
           command: sudo apt-get update
       - run:
           name: install snapd
-          command: sudo apt-get install snapd
-      - run:
-          name: install snapcraft
-          command: snap install snapcraft --classic
-      - run:
-          name: hash -r
-          command: hash -r
+          command: sudo apt-get install snapcraft
       - run:
           name: create snapcraft.yaml
           command: |
