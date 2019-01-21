@@ -76,7 +76,7 @@ workflows:
   version: 2
   untagged-build:
     jobs:
-    - test
+    - test000000
 
   tagged-build:
     jobs:
