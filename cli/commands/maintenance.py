@@ -9,9 +9,15 @@ from .. import cli
 from .. import options
 
 
-@cli.cli.command()
+@cli.cli.group()
+def maintenance():
+    # TODO: Add help text
+    pass
+
+
+@maintenance.command()
 @options.app()
-def maintenance(app):
+def check(app):
     """
     Returns if the application is in maintenance mode.
     """
@@ -28,9 +34,9 @@ def maintenance(app):
                    bold=True, fg='green'))
 
 
-@cli.cli.command(aliases=['maintenance:on'])
+@maintenance.command()
 @options.app()
-def maintenance_on(app):
+def on(app):
     """
     Turns maintenance mode on.
     """
@@ -44,9 +50,9 @@ def maintenance_on(app):
                            dim=True))
 
 
-@cli.cli.command(aliases=['maintenance:off'])
+@maintenance.command()
 @options.app()
-def maintenance_off(app):
+def off(app):
     """
     Turns maintenance mode off.
     """
