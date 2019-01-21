@@ -84,10 +84,10 @@ jobs:
       - checkout
       - run:
           name: apt-get update
-          command: apt-get update
+          command: sudo apt-get update
       - run:
           name: install snapcraft
-          command: apt-get install snapcraft
+          command: sudo apt-get install snapcraft
       - run:
           name: create snapcraft.yaml
           command: |
