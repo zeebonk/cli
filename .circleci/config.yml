@@ -1,4 +1,4 @@
-version: 2
+version: 2.0
 jobs:
   test:
     working_directory: ~/repo
@@ -39,9 +39,6 @@ jobs:
         destination: test-reports
 
   release_pypi:
-    filters:
-      tags:
-        only: /^[0-9]+\.[0-9]+\.[0-9]+$/
     docker:
     - image: circleci/python:3.7.0-node
     steps:
@@ -76,12 +73,17 @@ workflows:
   version: 2
   untagged-build:
     jobs:
-    - test000000
+    - test000
 
   tagged-build:
     jobs:
     - test
-    - release_pypi
+    - release_pypi:
+        requires:
+          - test
+        filters:
+          tags:
+            only: /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 #    - release_pypi
 #    - release_brew
