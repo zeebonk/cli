@@ -2,8 +2,8 @@
 import click
 
 from .. import cli
-from ..commands import config
 from .. import options
+from ..commands import config
 
 
 @cli.cli.command(name='config:list', hidden=True)
@@ -11,8 +11,9 @@ from .. import options
 @click.pass_context
 def config_list(ctx, app):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy config list\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy config list\n')
     ctx.forward(config.list_command)
 
 
@@ -24,8 +25,9 @@ def config_list(ctx, app):
 @click.pass_context
 def config_set(ctx, variables, app, message):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy config set\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy config set\n')
     ctx.forward(config.set_command)
 
 
@@ -35,8 +37,9 @@ def config_set(ctx, variables, app, message):
 @click.pass_context
 def config_get(ctx, variables, app):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy config get\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy config get\n')
     ctx.forward(config.get)
 
 
@@ -48,6 +51,7 @@ def config_get(ctx, variables, app):
 @click.pass_context
 def config_del(ctx, variables, app, message):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy config del\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy config del\n')
     ctx.forward(config.del_command)

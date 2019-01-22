@@ -2,16 +2,17 @@
 import click
 
 from .. import cli
-from ..commands import apps
 from .. import options
+from ..commands import apps
 
 
 @cli.cli.command(name='apps:list', hidden=True)
 @click.pass_context
 def apps_list(ctx):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy apps list\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy apps list\n')
     ctx.forward(apps.list_command)
 
 
@@ -22,8 +23,9 @@ def apps_list(ctx):
 @click.pass_context
 def apps_create(ctx, name, team):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy apps create\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy apps create\n')
     ctx.forward(apps.create)
 
 
@@ -32,8 +34,9 @@ def apps_create(ctx, name, team):
 @click.pass_context
 def apps_url(ctx, app):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy apps url\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy apps url\n')
     ctx.forward(apps.url)
 
 
@@ -44,6 +47,7 @@ def apps_url(ctx, app):
 @click.pass_context
 def apps_destroy(ctx, confirm, app):
     click.echo(click.style('Warning: ', fg='yellow') +
-              "This command is deprecated and will be removed in a future release. " +
-              "Please use $ asyncy apps destroy\n")
+               'This command is deprecated and will be removed' +
+               ' in a future release.' +
+               ' Please use $ asyncy apps destroy\n')
     ctx.forward(apps.destroy)
