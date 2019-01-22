@@ -9,10 +9,7 @@ from ..commands import apps
 @cli.cli.command(name='apps:list', hidden=True)
 @click.pass_context
 def apps_list(ctx):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy apps list\n')
+    cli.print_deprecated_warning(alternative='asyncy apps list')
     ctx.forward(apps.list_command)
 
 
@@ -22,10 +19,7 @@ def apps_list(ctx):
               help='Team name that owns this new Application')
 @click.pass_context
 def apps_create(ctx, name, team):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy apps create\n')
+    cli.print_deprecated_warning(alternative='asyncy apps create')
     ctx.forward(apps.create)
 
 
@@ -33,10 +27,7 @@ def apps_create(ctx, name, team):
 @options.app()
 @click.pass_context
 def apps_url(ctx, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy apps url\n')
+    cli.print_deprecated_warning(alternative='asyncy apps url')
     ctx.forward(apps.url)
 
 
@@ -46,8 +37,5 @@ def apps_url(ctx, app):
               help='Do not prompt to confirm destruction.')
 @click.pass_context
 def apps_destroy(ctx, confirm, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy apps destroy\n')
+    cli.print_deprecated_warning(alternative='asyncy apps destroy')
     ctx.forward(apps.destroy)

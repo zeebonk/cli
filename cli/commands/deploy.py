@@ -14,7 +14,9 @@ from ..api import Config, Releases
 @click.option('--message', is_flag=True, help='Deployment message')
 @options.app(allow_option=False)
 def deploy(app, message):
-    # TODO: Add help text
+    """
+    Deploy your app instantly to the Asyncy Cloud
+    """
     cli.user()
 
     payload = compile_app(app, False)  # Also adds a spinner.

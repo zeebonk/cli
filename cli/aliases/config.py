@@ -10,10 +10,7 @@ from ..commands import config
 @options.app()
 @click.pass_context
 def config_list(ctx, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy config list\n')
+    cli.print_deprecated_warning(alternative='asyncy config list')
     ctx.forward(config.list_command)
 
 
@@ -24,10 +21,7 @@ def config_list(ctx, app):
 @options.app()
 @click.pass_context
 def config_set(ctx, variables, app, message):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy config set\n')
+    cli.print_deprecated_warning(alternative='asyncy config set')
     ctx.forward(config.set_command)
 
 
@@ -36,10 +30,7 @@ def config_set(ctx, variables, app, message):
 @options.app()
 @click.pass_context
 def config_get(ctx, variables, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy config get\n')
+    cli.print_deprecated_warning(alternative='asyncy config get')
     ctx.forward(config.get)
 
 
@@ -50,8 +41,5 @@ def config_get(ctx, variables, app):
 @options.app()
 @click.pass_context
 def config_del(ctx, variables, app, message):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy config del\n')
+    cli.print_deprecated_warning(alternative='asyncy config del')
     ctx.forward(config.del_command)

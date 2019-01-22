@@ -24,7 +24,9 @@ def maintenance(enabled: bool) -> str:
 
 @cli.cli.group()
 def apps():
-    # TODO: Add help text
+    """
+    Create, list and manage apps which you have access to
+    """
     pass
 
 

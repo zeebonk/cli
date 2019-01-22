@@ -16,7 +16,7 @@ from .. import cli
 @click.option('--debug', is_flag=True, help='Compile in debug mode')
 def test(debug):
     """
-    Test the Stories
+    Compile your project and check for any errors
     """
 
     cli.user()

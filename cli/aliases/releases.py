@@ -12,10 +12,7 @@ from ..commands import releases
 @options.app()
 @click.pass_context
 def list_command(ctx, app, limit):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy releases list\n')
+    cli.print_deprecated_warning(alternative='asyncy releases list')
     ctx.forward(releases.list_command)
 
 
@@ -24,8 +21,5 @@ def list_command(ctx, app, limit):
 @options.app()
 @click.pass_context
 def rollback(ctx, version, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy releases rollback\n')
+    cli.print_deprecated_warning(alternative='asyncy releases rollback')
     ctx.forward(releases.rollback)

@@ -13,7 +13,9 @@ from ..helpers.datetime import parse_psql_date_str, reltime
 
 @cli.cli.group()
 def releases():
-    # TODO: Add help text
+    """
+    Manage releases for your app (including rollback)
+    """
     pass
 
 

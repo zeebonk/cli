@@ -11,7 +11,9 @@ from .. import options
 
 @cli.cli.group()
 def maintenance():
-    # TODO: Add help text
+    """
+    Manage the availability of your apps
+    """
     pass
 
 

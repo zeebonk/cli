@@ -10,10 +10,7 @@ from ..commands import maintenance
 @options.app()
 @click.pass_context
 def maintenance_check(ctx, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy maintenance check\n')
+    cli.print_deprecated_warning(alternative='asyncy maintenance check')
     ctx.forward(maintenance.check)
 
 
@@ -21,10 +18,7 @@ def maintenance_check(ctx, app):
 @options.app()
 @click.pass_context
 def maintenance_on(ctx, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy maintenance on\n')
+    cli.print_deprecated_warning(alternative='asyncy maintenance on')
     ctx.forward(maintenance.on)
 
 
@@ -32,8 +26,5 @@ def maintenance_on(ctx, app):
 @options.app()
 @click.pass_context
 def maintenance_off(ctx, app):
-    click.echo(click.style('Warning: ', fg='yellow') +
-               'This command is deprecated and will be removed' +
-               ' in a future release.' +
-               ' Please use $ asyncy maintenance off\n')
+    cli.print_deprecated_warning(alternative='asyncy maintenance off')
     ctx.forward(maintenance.off)

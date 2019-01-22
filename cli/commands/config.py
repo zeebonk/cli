@@ -11,7 +11,9 @@ from .. import options
 
 @cli.cli.group()
 def config():
-    # TODO: Add help text
+    """
+    Update the configuration for your app
+    """
     pass
 
 
