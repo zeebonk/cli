@@ -94,6 +94,12 @@ jobs:
           command: pip3 install virtualenv
       - checkout
       - run:
+          name: change git name
+          command: git config --global user.name "Asyncy Infrastructure"
+      - run:
+          name: change git email
+          command: git config --global user.email infra@asyncy.com
+      - run:
           name: create brew pr
           command: bash ./scripts/update_brew.sh 0.3.4
 #  release_snap:
