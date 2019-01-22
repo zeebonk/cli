@@ -76,7 +76,7 @@ jobs:
       - checkout
       - run:
           name: create brew pr
-          command: bash ./scripts/update_brew.sh $CIRCLE_TAG
+          command: bash ./scripts/update_brew.sh 0.3.4
 #  release_snap:
 #    docker:
 #      - image: cibuilds/snapcraft:stable
