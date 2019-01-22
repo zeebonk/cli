@@ -47,7 +47,7 @@ git commit -a -m "Release $tag."
 git push origin release_$tag
 git checkout master
 git merge release_$tag
-git tag 0.3.4
+git tag $tag
 git push origin master
 git push origin master --tags
 
