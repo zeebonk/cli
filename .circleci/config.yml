@@ -70,9 +70,9 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "8e:2f:db:cd:a7:a4:38:ca:c1:c3:8f:ef:fc:27:4a:93"
-      - restore_cache:
-          keys:
-            - brew-cache-{{ .Branch }}
+#      - restore_cache:
+#          keys:
+#            - brew-cache-{{ .Branch }}
       - run:
           name: install or re-link brew
           command: |
@@ -84,11 +84,11 @@ jobs:
       - run:
           name: upgrade python
           command: brew upgrade python || echo "Python is already installed"
-      - save_cache:
-          paths:
-            - /usr/local/Cellar
-            - /usr/local/Homebrew
-          key: brew-cache-{{ .Branch }}
+#      - save_cache:
+#          paths:
+#            - /usr/local/Cellar
+#            - /usr/local/Homebrew
+#          key: brew-cache-{{ .Branch }}
       - run:
           name: install virtualenv
           command: pip3 install virtualenv
