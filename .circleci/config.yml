@@ -73,6 +73,9 @@ jobs:
       - run:
           name: upgrade python
           command: brew upgrade python
+      - run:
+          name: install virtualenv
+          command: pip3 install virtualenv
       - checkout
       - run:
           name: create brew pr
