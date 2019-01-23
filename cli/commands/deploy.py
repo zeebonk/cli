@@ -36,6 +36,6 @@ def deploy(app, message):
                f' Version {release["id"]} of your app has '
                f'been queued for deployment.\n\n'
                f'Check the deployment status with:')
-    cli.print_command('asyncy releases')
+    cli.print_command('asyncy releases list')
     click.echo()
     click.echo(f'If your story listens to HTTP requests, visit {url}')
