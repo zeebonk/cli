@@ -17,7 +17,7 @@ from ..api import Apps
 @options.app()
 def logs(follow, app):
     """
-    Show application logs
+    Fetch logs for your app
     """
     if follow:
         click.echo('-f (following log output) is not supported yet.')

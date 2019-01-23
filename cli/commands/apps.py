@@ -22,8 +22,16 @@ def maintenance(enabled: bool) -> str:
         return 'running'
 
 
-@cli.cli.command()
+@cli.cli.group()
 def apps():
+    """
+    Create, list and manage apps which you have access to
+    """
+    pass
+
+
+@apps.command(name='list')
+def list_command():
     """
     List your applications
     """
@@ -53,7 +61,7 @@ def apps():
 
     if count == 0:
         click.echo('No application found. Create your first app with')
-        click.echo(click.style('$ asyncy apps:create', fg='magenta'))
+        click.echo(click.style('$ asyncy apps create', fg='magenta'))
     else:
         click.echo(table.draw())
 
@@ -83,11 +91,11 @@ def _is_git_repo_good():
         pass
 
 
-@cli.cli.command(aliases=['apps:create'])
+@apps.command()
 @click.argument('name', nargs=1, required=False)
 @click.option('--team', type=str,
               help='Team name that owns this new Application')
-def apps_create(name, team):
+def create(name, team):
     """
     Create a new Asyncy App
     """
@@ -139,12 +147,12 @@ def apps_create(name, team):
     )
 
 
-@cli.cli.command(aliases=['apps:url'])
+@apps.command()
 @options.app()
-def apps_url(app):
+def url(app):
     """
     Returns the full url of your application.
-    Great to use with $(asyncy apps:url) in bash.
+    Great to use with $(asyncy apps url) in bash.
     """
     cli.user()
     print_nl = False
@@ -155,11 +163,11 @@ def apps_url(app):
     click.echo(f'https://{app}.asyncyapp.com', nl=print_nl)
 
 
-@cli.cli.command(aliases=['apps:destroy'])
+@apps.command()
 @options.app()
 @click.option('--confirm', is_flag=True,
               help='Do not prompt to confirm destruction.')
-def apps_destroy(confirm, app):
+def destroy(confirm, app):
     """
     Destroy an application
     """

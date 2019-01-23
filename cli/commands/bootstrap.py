@@ -16,7 +16,7 @@ from .. import cli
                                    'every', 'websocket', '-']))
 def bootstrap(story):
     """
-    Produce example stories as templates to work from.
+    Bootstrap your app with a pre-defined template
     """
     if story != '-':
         data = pkgutil.get_data('cli', f'stories/{story}.story')
