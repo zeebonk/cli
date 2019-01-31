@@ -150,7 +150,8 @@ jobs:
           command: |
               for i in $(sudo dpkg -l "*$(uname -r)*" | grep kernel | awk '{print $2}'); do echo $i hold | sudo dpkg --set-selections; done
               sudo apt install -y snapd
-              sudo snap refresh core
+              sudo snap install core
+              sudo snap install core18
       - run:
           name: Install the freshly build asyncy snap
           command: |
