@@ -106,7 +106,8 @@ jobs:
     # Building and testing a snap can be tricky as snapd can't run inside a
     # container. To able to run and test our build snap, we need to use a
     # `machine` executor.
-    machine: true
+    machine: 
+      image: circleci/classic:edge
     steps:
       - checkout
       - run:
