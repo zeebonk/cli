@@ -1,68 +1,43 @@
 version: 2.0
 jobs:
+
   test:
     working_directory: ~/repo
     docker:
-    - image: circleci/python:3.7.0-node
+      - image: circleci/python:3.7.0
     steps:
-    - checkout
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "setup.py" }}
-        - v1-dependencies-
-
-    - run:
-        name: install dependencies
-        command: |
-          python -m venv venv
-          . venv/bin/activate
-          python3 setup.py install
-          pip install tox
-
-    - save_cache:
-        paths:
-        - ./venv
-        key: v1-dependencies-{{ checksum "setup.py" }}
-
-    - run:
-        command: |
-          . venv/bin/activate
-          tox
-
-    - run:
-        name: collect coverage
-        command: |
-          bash <(curl -s https://codecov.io/bash)
-
-    - store_artifacts:
-        path: test-reports
-        destination: test-reports
+      - checkout
+      # - run:
+          # name: install dependencies
+          # command: |
+          #   pip install . --user
+      - run:
+          name: run tox
+          command: |
+            sudo pip install tox
+            tox
+      - run:
+          name: collect coverage
+          command: bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
 
   release_pypi:
     docker:
-    - image: circleci/python:3.7.0-node
+    - image: circleci/python:3.7.0
     steps:
       - checkout
       - run:
-          name: setup venv
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-      - run:
           name: install twine
-          command: |
-            . venv/bin/activate
-            pip install twine
+          command: pip install twine
       - run:
           name: sdist
-          command: |
-            . venv/bin/activate
-            python setup.py sdist
-      - run:
-          name: upload
-          command: |
-            . venv/bin/activate
-            twine upload dist/asyncy-*.tar.gz
+          command: python setup.py sdist
+      # - run:
+      #     name: upload
+      #     command: twine upload dist/asyncy-*.tar.gz
+
   release_brew:
     macos:
       xcode: "9.0"
@@ -70,9 +45,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "8e:2f:db:cd:a7:a4:38:ca:c1:c3:8f:ef:fc:27:4a:93"
-#      - restore_cache:
-#          keys:
-#            - brew-cache-{{ .Branch }}
       - run:
           name: install or re-link brew
           command: |
@@ -84,11 +56,6 @@ jobs:
       - run:
           name: upgrade python
           command: brew upgrade python || echo "Python is already installed"
-#      - save_cache:
-#          paths:
-#            - /usr/local/Cellar
-#            - /usr/local/Homebrew
-#          key: brew-cache-{{ .Branch }}
       - run:
           name: install virtualenv
           command: pip3 install virtualenv
@@ -102,10 +69,12 @@ jobs:
       - run:
           name: create brew pr
           command: bash ./scripts/update_brew.sh $CIRCLE_TAG
+
   release_snap:
     # Building and testing a snap can be tricky as snapd can't run inside a
     # container. To able to run and test our build snap, we need to use a
-    # `machine` executor.
+    # `machine` executor, we use edge as of time of writing that is the only
+    # version on which we got it to work.
     machine:
       image: circleci/classic:edge
     steps:
@@ -119,7 +88,7 @@ jobs:
             summary: Asyncy CLI
             description: Asyncy CLI
             grade: devel
-            confinement: devmode
+            confinement: strict
             base: core18
 
             apps:
@@ -140,14 +109,16 @@ jobs:
             CIRCLE_TAG: 0.3.8
       - run:
           name: Build snap
-          # The machine executor runs an old version of ubuntu that comes with
-          # an old version of snapcraft, the snap build tool. We need a newer
-          # version of snapcraft that supports the `base` setting, which we use
-          # to specify a base that contains a recent version of Python. Thus we
-          # run snapcraft inside a recent ubuntu docker container.
+          # The machine executor runs a version of ubuntu that doesn't have the
+          # snapcraft readily available. The docs of CircleCI suggest to run
+          # from inside a standard container.
+          # https://circleci.com/blog/build-test-publish-snap-packages/
           command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
       - run:
           name: Install snapd
+          # Even tough our build snap explicitly depends on core18, after
+          # intalling it, snap complains about not being able to find it, so we
+          # install them here manually.
           command: |
             sudo apt install -y snapd
             sudo snap install core
@@ -160,11 +131,14 @@ jobs:
             CIRCLE_TAG: 0.3.8
       - run:
           name: Verify the installed snap version
-          command: /snap/bin/asyncy version | grep ${CIRCLE_TAG}
+          # /snap/bin isn't on $PATH here, so we specify the absolute path
+          command: /snap/bin/asyncy version | grep "Asyncy ${CIRCLE_TAG}"
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
           name: Release snap
+          # Just as during the build of the snap, we run snapcraft inside a
+          # container as well.
           command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && echo $SNAPCRAFT_LOGIN | snapcraft login --with - && snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap"
           environment:
             CIRCLE_TAG: 0.3.8
@@ -173,32 +147,31 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - release_snap
-    # - test:
-    #     filters:
-    #       tags:
-    #         only: /.*/
-    # - release_pypi:
-    #     requires:
-    #       - test
-    #     filters:
-    #       tags:
-    #         only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-    #       branches:
-    #         ignore: /.*/
-    # - release_snap:
-    #     requires:
-    #       - release_pypi
-    #     filters:
-    #       tags:
-    #         only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-    #       branches:
-    #         ignore: /.*/
-    # - release_brew:
-    #     requires:
-    #     - release_pypi
-    #     filters:
-    #       tags:
-    #         only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-    #       branches:
-    #         ignore: /.*/
+      - test:
+          filters:
+            tags:
+              only: /.*/
+      - release_pypi:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              ignore: /.*/
+      - release_snap:
+          requires:
+            - release_pypi
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              ignore: /.*/
+      - release_brew:
+          requires:
+            - release_pypi
+          filters:
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              ignore: /.*/
