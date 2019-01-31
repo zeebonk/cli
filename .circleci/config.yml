@@ -145,16 +145,11 @@ jobs:
           # version of snapcraft that supports the `base` setting, which we use
           # to specify a base that contains a recent version of Python. Thus we
           # run snapcraft inside a recent ubuntu docker container.
-          # command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
-          command: |
-            sudo apt install -y snapcraft
-            snapcraft
+          command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
       - run:
           name: Install snapd
           command: |
             sudo apt install -y snapd
-            sudo snap install core
-            sudo snap install core18
       - run:
           name: Install the freshly build asyncy snap
           command: |
@@ -167,13 +162,11 @@ jobs:
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: Snapcraft login
-          command: echo $SNAPCRAFT_LOGIN | snapcraft login --with -
-      - run:
-          name: Snapcraft push
-          command: snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap
+          name: Release snap
+          command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && echo $SNAPCRAFT_LOGIN | snapcraft login --with - && snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap"
           environment:
             CIRCLE_TAG: 0.3.8
+
 workflows:
   version: 2
   build-test-deploy:
