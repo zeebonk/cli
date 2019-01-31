@@ -139,7 +139,7 @@ jobs:
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: Build asyncy snap
+          name: Build snap
           # The machine executor runs an old version of ubuntu that comes with
           # an old version of snapcraft, the snap build tool. We need a newer
           # version of snapcraft that supports the `base` setting, which we use
@@ -150,14 +150,16 @@ jobs:
           name: Install snapd
           command: |
             sudo apt install -y snapd
+            sudo snap install core
+            sudo snap install core18
       - run:
-          name: Install the freshly build asyncy snap
+          name: Install the freshly build snap
           command: |
             sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: Check installed asyncy snap version
+          name: Verify the installed snap version
           command: /snap/bin/asyncy version | grep ${CIRCLE_TAG}
           environment:
             CIRCLE_TAG: 0.3.8
