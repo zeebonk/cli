@@ -103,12 +103,12 @@ jobs:
           name: create brew pr
           command: bash ./scripts/update_brew.sh $CIRCLE_TAG
   release_snap:
+    # Building and testing a snap can be tricky as snapd can't run inside a
+    # container. To able to run and test our build snap, we need to use a
+    # `machine` executor.
     machine: true
     steps:
       - checkout
-      - run:
-          name: install snapd
-          command: sudo apt install -y snapd
       - run:
           name: create snapcraft.yaml
           command: |
@@ -135,16 +135,22 @@ jobs:
                 python-packages:
                 - asyncy==$CIRCLE_TAG
             " > snapcraft.yaml
+            cat snapcraft.yaml
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: print snapcraft
-          command: cat snapcraft.yaml
-      - run:
-          name: build snap
+          name: build asyncy snap
+          # The machine executor runs an old version of ubuntu that comes with
+          # an old version of snapcraft, the snap build tool. We need a newer
+          # version of snapcraft that supports the `base` setting, which we use
+          # to specify a base that contains a recent version of Python. Thus we
+          # run snapcraft inside a recent ubuntu docker container.
           command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
       - run:
-          name: install snap
+          name: install snapd
+          command: sudo apt install -y snapd
+      - run:
+          name: install the build asyncy snap
           command: sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
           environment:
             CIRCLE_TAG: 0.3.8
@@ -153,12 +159,14 @@ jobs:
           command: asyncy version | grep ${CIRCLE_TAG}
           environment:
             CIRCLE_TAG: 0.3.8
-      # - run:
-      #     name: snapcraft login
-      #     command: echo $SNAPCRAFT_LOGIN | snapcraft login --with -
-      # - run:
-      #     name: snapcraft push
-      #     command: snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap
+      - run:
+          name: snapcraft login
+          command: echo $SNAPCRAFT_LOGIN | snapcraft login --with -
+      - run:
+          name: snapcraft push
+          command: snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap
+          environment:
+            CIRCLE_TAG: 0.3.8
 workflows:
   version: 2
   build-test-deploy:
