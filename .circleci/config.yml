@@ -147,7 +147,9 @@ jobs:
           command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
       - run:
           name: Install snapd
-          command: sudo apt install -y snapd
+          command: |
+              sudo apt install -y snapd
+              sudo snap refresh core
       - run:
           name: Install the freshly build asyncy snap
           command: |
