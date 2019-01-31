@@ -148,6 +148,7 @@ jobs:
       - run:
           name: Install snapd
           command: |
+              for i in $(sudo dpkg -l "*$(uname -r)*" | grep kernel | awk '{print $2}'); do echo $i hold | sudo dpkg --set-selections; done
               sudo apt install -y snapd
               sudo snap refresh core
       - run:
