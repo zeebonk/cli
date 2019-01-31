@@ -152,12 +152,11 @@ jobs:
           name: Install the freshly build asyncy snap
           command: |
             sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
-            asyncy version | grep ${CIRCLE_TAG}
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
           name: Check installed asyncy snap version
-          command: asyncy version | grep ${CIRCLE_TAG}
+          command: /snap/bin/asyncy version | grep ${CIRCLE_TAG}
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
