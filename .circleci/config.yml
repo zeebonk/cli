@@ -110,7 +110,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: create snapcraft.yaml
+          name: Create snapcraft.yaml
           command: |
             echo "
             name: asyncy
@@ -135,11 +135,10 @@ jobs:
                 python-packages:
                 - asyncy==$CIRCLE_TAG
             " > snapcraft.yaml
-            cat snapcraft.yaml
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: build asyncy snap
+          name: Build asyncy snap
           # The machine executor runs an old version of ubuntu that comes with
           # an old version of snapcraft, the snap build tool. We need a newer
           # version of snapcraft that supports the `base` setting, which we use
@@ -147,23 +146,25 @@ jobs:
           # run snapcraft inside a recent ubuntu docker container.
           command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
       - run:
-          name: install snapd
+          name: Install snapd
           command: sudo apt install -y snapd
       - run:
-          name: install the build asyncy snap
-          command: sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
+          name: Install the freshly build asyncy snap
+          command: |
+            sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
+            asyncy version | grep ${CIRCLE_TAG}
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: check version
+          name: Check installed asyncy snap version
           command: asyncy version | grep ${CIRCLE_TAG}
           environment:
             CIRCLE_TAG: 0.3.8
       - run:
-          name: snapcraft login
+          name: Snapcraft login
           command: echo $SNAPCRAFT_LOGIN | snapcraft login --with -
       - run:
-          name: snapcraft push
+          name: Snapcraft push
           command: snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap
           environment:
             CIRCLE_TAG: 0.3.8
