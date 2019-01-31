@@ -106,7 +106,7 @@ jobs:
     # Building and testing a snap can be tricky as snapd can't run inside a
     # container. To able to run and test our build snap, we need to use a
     # `machine` executor.
-    machine: 
+    machine:
       image: circleci/classic:edge
     steps:
       - checkout
@@ -145,14 +145,16 @@ jobs:
           # version of snapcraft that supports the `base` setting, which we use
           # to specify a base that contains a recent version of Python. Thus we
           # run snapcraft inside a recent ubuntu docker container.
-          command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
+          # command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
+          command: |
+            sudo apt install -y snapcraft
+            snapcraft
       - run:
           name: Install snapd
           command: |
-              for i in $(sudo dpkg -l "*$(uname -r)*" | grep kernel | awk '{print $2}'); do echo $i hold | sudo dpkg --set-selections; done
-              sudo apt install -y snapd
-              sudo snap install core
-              sudo snap install core18
+            sudo apt install -y snapd
+            sudo snap install core
+            sudo snap install core18
       - run:
           name: Install the freshly build asyncy snap
           command: |
