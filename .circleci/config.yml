@@ -2,6 +2,9 @@ version: 2.0
 jobs:
 
   test:
+    # TODO: Remove
+    environment:
+      CIRCLE_TAG: 0.3.8
     working_directory: ~/repo
     docker:
       - image: circleci/python:3.7.0
@@ -17,6 +20,9 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash)
 
   release_pypi:
+    # TODO: Remove
+    environment:
+      CIRCLE_TAG: 0.3.8
     docker:
       - image: circleci/python:3.7.0
     steps:
@@ -28,9 +34,12 @@ jobs:
           name: Upload to PyPI
           command: |
             sudo pip install twine
-#twine upload dist/asyncy-*.tar.gz
+#            twine upload dist/asyncy-*.tar.gz
 
   release_brew:
+    # TODO: Remove
+    environment:
+      CIRCLE_TAG: 0.3.8
     macos:
       xcode: "9.0"
     steps:
@@ -58,11 +67,14 @@ jobs:
       - run:
           name: Change git email
           command: git config --global user.email infra@asyncy.com
-      # - run:
-      #     name: create brew pr
-      #     command: bash ./scripts/update_brew.sh $CIRCLE_TAG
+      - run:
+          name: create brew pr
+          command: bash ./scripts/update_brew.sh $CIRCLE_TAG
 
   release_snap:
+    # TODO: Remove
+    environment:
+      CIRCLE_TAG: 0.3.8
     # Building and testing a snap can be tricky as snapd can't run inside a
     # container. To able to run and test our build snap, we need to use a
     # `machine` executor, we use edge as of time of writing that is the only
@@ -97,15 +109,22 @@ jobs:
                 python-packages:
                 - asyncy==$CIRCLE_TAG
             " > snapcraft.yaml
-          environment:
-            CIRCLE_TAG: 0.3.8
       - run:
           name: Build snap
           # The machine executor runs a version of ubuntu that doesn't have the
           # snapcraft readily available. The docs of CircleCI suggest to run
           # from inside a standard container.
           # https://circleci.com/blog/build-test-publish-snap-packages/
-          command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && cd $(pwd) && snapcraft"
+          command: >
+            docker run
+              -t ubuntu:18.04
+              -v $(pwd):$(pwd)
+              sh -c "
+                apt update -qq &&
+                apt install snapcraft -y &&
+                cd $(pwd) &&
+                snapcraft
+              "
       - run:
           name: Install snapd
           # Even tough our build snap explicitly depends on core18, after
@@ -117,23 +136,27 @@ jobs:
             sudo snap install core18
       - run:
           name: Install the freshly build snap
-          command: |
-            sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap --dangerous --devmode
-          environment:
-            CIRCLE_TAG: 0.3.8
+          command: >
+            sudo snap install asyncy_${CIRCLE_TAG}_amd64.snap
+              --dangerous
+              --devmode
       - run:
           name: Verify the installed snap version
           # /snap/bin isn't on $PATH here, so we specify the absolute path
           command: /snap/bin/asyncy version | grep "Asyncy ${CIRCLE_TAG}"
-          environment:
-            CIRCLE_TAG: 0.3.8
-      - run:
-          name: Release snap
-          # Just as during the build of the snap, we run snapcraft inside a
-          # container as well.
-          command: docker run -v $(pwd):$(pwd) -t ubuntu:18.04 sh -c "apt update -qq && apt install snapcraft -y && echo $SNAPCRAFT_LOGIN | snapcraft login --with - && snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap"
-          environment:
-            CIRCLE_TAG: 0.3.8
+      # - run:
+      #     name: Release snap
+      #     # Just as during the build of the snap, we run snapcraft inside a
+      #     # container as well.
+      #     command: >
+      #       docker run
+      #         -t ubuntu:18.04
+      #         -v $(pwd):$(pwd)
+      #         sh -c "
+      #           apt update -qq &&
+      #           apt install snapcraft -y &&
+      #           echo $SNAPCRAFT_LOGIN | snapcraft login --with - &&
+      #           snapcraft push --release edge asyncy_${CIRCLE_TAG}_amd64.snap
 
 workflows:
   version: 2
