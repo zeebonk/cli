@@ -115,7 +115,7 @@ jobs:
           # snapcraft readily available. The docs of CircleCI suggest to run
           # from inside a standard container.
           # https://circleci.com/blog/build-test-publish-snap-packages/
-          command: >
+          command: '
             docker run
               -t ubuntu:18.04
               -v $(pwd):$(pwd)
@@ -125,6 +125,7 @@ jobs:
                 cd $(pwd) &&
                 snapcraft
               "
+            '
       - run:
           name: Install snapd
           # Even tough our build snap explicitly depends on core18, after
