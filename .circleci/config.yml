@@ -63,9 +63,9 @@ jobs:
 
   release_snap:
     # Building and testing a snap can be tricky as snapd can't run inside a
-    # container. To able to run and test our build snap, we need to use a
-    # `machine` executor, we use edge as of time of writing that is the only
-    # version on which we got it to work.
+    # container. To able to run and test our freshly build snap, we need to use
+    # a `machine` executor. We use `edge` because, at time of writing, that is
+    # the only version on which we got it to work.
     machine:
       image: circleci/classic:edge
     steps:
@@ -98,9 +98,9 @@ jobs:
             " > snapcraft.yaml
       - run:
           name: Build snap
-          # The machine executor runs a version of ubuntu that doesn't have the
-          # snapcraft readily available. The docs of CircleCI suggest to run
-          # from inside a standard container.
+          # The machine executor runs a version of Ubuntu that doesn't have a
+          # snapcraft package readily available. The docs of CircleCI suggest to
+          # run from inside a standard container.
           # https://circleci.com/blog/build-test-publish-snap-packages/
           command: '
             docker run
@@ -115,9 +115,9 @@ jobs:
             '
       - run:
           name: Install snapd
-          # Even tough our build snap explicitly depends on core18, after
-          # intalling it, snap complains about not being able to find it, so we
-          # install them here manually.
+          # Even though our freshly build snap explicitly depends on the core18
+          # base, snap complains about not being able to find said bases after
+          # installing our snap. Therefore we install them explicitly.
           command: |
             sudo apt install -y snapd
             sudo snap install core
@@ -130,13 +130,13 @@ jobs:
               --devmode
             '
       - run:
-          name: Verify the installed snap version
+          name: Verify the installed snap's version
           # /snap/bin isn't on $PATH here, so we specify the absolute path
           command: /snap/bin/asyncy version | grep "Asyncy ${CIRCLE_TAG}"
       - run:
           name: Release snap
           # Just as during the build of the snap, we run snapcraft inside a
-          # container as well.
+          # container.
           command: '
             docker run
               -v $(pwd):$(pwd)
