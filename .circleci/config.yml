@@ -117,8 +117,8 @@ jobs:
           # https://circleci.com/blog/build-test-publish-snap-packages/
           command: '
             docker run
-              -t ubuntu:18.04
               -v $(pwd):$(pwd)
+              -t ubuntu:18.04
               sh -c "
                 apt update -qq &&
                 apt install snapcraft -y &&
@@ -151,8 +151,8 @@ jobs:
       #     # container as well.
       #     command: >
       #       docker run
-      #         -t ubuntu:18.04
       #         -v $(pwd):$(pwd)
+      #         -t ubuntu:18.04
       #         sh -c "
       #           apt update -qq &&
       #           apt install snapcraft -y &&
