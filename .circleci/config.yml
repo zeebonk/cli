@@ -7,36 +7,28 @@ jobs:
       - image: circleci/python:3.7.0
     steps:
       - checkout
-      # - run:
-          # name: install dependencies
-          # command: |
-          #   pip install . --user
       - run:
-          name: run tox
+          name: Run tests and flake8 using tox
           command: |
             sudo pip install tox
             tox
       - run:
-          name: collect coverage
+          name: Upload coverage data to codecov
           command: bash <(curl -s https://codecov.io/bash)
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
 
   release_pypi:
     docker:
-    - image: circleci/python:3.7.0
+      - image: circleci/python:3.7.0
     steps:
       - checkout
       - run:
-          name: install twine
-          command: pip install twine
-      - run:
-          name: sdist
+          name: Build source distribution
           command: python setup.py sdist
-      # - run:
-      #     name: upload
-      #     command: twine upload dist/asyncy-*.tar.gz
+      - run:
+          name: Upload to PyPI
+          command: |
+            sudo pip install twine
+#twine upload dist/asyncy-*.tar.gz
 
   release_brew:
     macos:
@@ -46,7 +38,7 @@ jobs:
           fingerprints:
             - "8e:2f:db:cd:a7:a4:38:ca:c1:c3:8f:ef:fc:27:4a:93"
       - run:
-          name: install or re-link brew
+          name: Install or re-link brew
           command: |
             if [ -d /usr/local/Cellar ]; then
               for i in `ls /usr/local/Cellar/`; do echo "Re-linking $i"; brew link --force $i; done
@@ -54,21 +46,21 @@ jobs:
               /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
             fi
       - run:
-          name: upgrade python
+          name: Upgrade Python
           command: brew upgrade python || echo "Python is already installed"
       - run:
-          name: install virtualenv
+          name: Install virtualenv
           command: pip3 install virtualenv
       - checkout
       - run:
-          name: change git name
+          name: Change git name
           command: git config --global user.name "Asyncy Infrastructure"
       - run:
-          name: change git email
+          name: Change git email
           command: git config --global user.email infra@asyncy.com
-      - run:
-          name: create brew pr
-          command: bash ./scripts/update_brew.sh $CIRCLE_TAG
+      # - run:
+      #     name: create brew pr
+      #     command: bash ./scripts/update_brew.sh $CIRCLE_TAG
 
   release_snap:
     # Building and testing a snap can be tricky as snapd can't run inside a
@@ -154,24 +146,24 @@ workflows:
       - release_pypi:
           requires:
             - test
-          filters:
-            tags:
-              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              ignore: /.*/
+          # filters:
+          #   tags:
+          #     only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+          #   branches:
+          #     ignore: /.*/
       - release_snap:
           requires:
             - release_pypi
-          filters:
-            tags:
-              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              ignore: /.*/
+          # filters:
+          #   tags:
+          #     only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+          #   branches:
+          #     ignore: /.*/
       - release_brew:
           requires:
             - release_pypi
-          filters:
-            tags:
-              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
-            branches:
-              ignore: /.*/
+          # filters:
+          #   tags:
+          #     only: /^[0-9]+\.[0-9]+\.[0-9]+$/
+          #   branches:
+          #     ignore: /.*/
