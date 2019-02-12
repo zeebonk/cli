@@ -3,8 +3,8 @@
 set -e
 #set -x
 
-pip=pip3.7
-python=python3.7
+pip=pip3
+python=python3
 
 tag=$1
 
