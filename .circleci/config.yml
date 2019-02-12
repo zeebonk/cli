@@ -7,9 +7,15 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Create virtualenv with tox
+          command: |
+            python -m venv venv
+            source venv/bin/activate
+            pip install tox
+      - run:
           name: Run tests and flake8 using tox
           command: |
-            sudo pip install tox
+            source venv/bin/activate
             tox
       - run:
           name: Upload coverage data to codecov
@@ -24,9 +30,15 @@ jobs:
           name: Build source distribution
           command: python setup.py sdist
       - run:
+          name: Create virtualenv with twine
+          command: |
+            python -m venv venv
+            source venv/bin/activate
+            pip install twine
+      - run:
           name: Upload to PyPI
           command: |
-            sudo pip install twine
+            source venv/bin/activate
             twine upload dist/asyncy-${CIRCLE_TAG}.tar.gz
 
   release_brew:
